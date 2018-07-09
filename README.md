@@ -30,7 +30,8 @@ Write the function setting.  `./functions/AWS-billing-information/function.json`
 
 ```
   "hooks": {
-    "build": "pip install -r requirements.txt -t ./site-packages"
+    "build": "pip install -r requirements.txt -t ./site-packages",
+    "clean": "rm -rf ./site-packages"
   },
   "environment": {
     "PYTHONPATH": "/var/runtime:/var/task/site-packages"
