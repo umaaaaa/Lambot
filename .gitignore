@@ -3,3 +3,4 @@ function.json
 site-packages
 .env
 __pychache__/
+*.pyc

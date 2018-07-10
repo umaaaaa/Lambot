@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from sayings import *
+import random
 
 def handle(event, context):
     text = event['text']
     cmd_list = text.split()
-    for cmd in cmd_list:
+    lambot_message = '???';
+    for i, cmd in enumerate(cmd_list):
         # 最初の1つ目はlambotのはずなのでスキップ
-        if (cmd == text_list[0]):
+        if (i == 0):
             continue
-        return {'text': cmd }
-    return {'text': '町ではお前が法律かもしれないが、ここでは俺が法律だ'}
+        if (i == 1):
+            if (cmd == 'say'):
+                lambot_message = random.choice(SAYING_LIST)
+
+    return { 'text': lambot_message }
 
 
 if __name__=='__main__':
