@@ -1,24 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from slackclient import SlackClient
-import os
-
-
-def post_slack(message):
-    token = os.environ['SLACK_TOKEN']
-    sc = SlackClient(token)
-    sc.api_call(
-        "chat.postMessage",
-        channel='#general',
-        text=message,
-        username='lambot',
-    )
-
 
 def handle(event, context):
+    text = event['text']
+    cmd_list = text.split()
+    for cmd in cmd_list:
+        # 最初の1つ目はlambotのはずなのでスキップ
+        if (cmd == text_list[0]):
+            continue
+        return {'text': cmd }
     return {'text': '町ではお前が法律かもしれないが、ここでは俺が法律だ'}
 
 
 if __name__=='__main__':
-    handle('', '')
+  handle({'text': 'lambot hoge'}, '')
