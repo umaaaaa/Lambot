@@ -1,3 +1,5 @@
 project.json
 function.json
 site-packages
+.env
+__pychache__/
