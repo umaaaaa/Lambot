@@ -56,12 +56,14 @@ def convert_cm_to_sun(cm):
 
 
 def acme(cmd, word):
+  message = ''
   if (cmd in ['マグロ', 'まぐろ', '鮪']):
-    return 'あいよ っ🍣'
+    message = 'あいよ っ🍣'
   if (cmd == 'say'):
-    return random.choice(SAYING_LIST)
+    message = random.choice(SAYING_LIST)
   if (cmd == '回文'):
-    return word[::-1]
+    message = word[::-1]
+  return message
 
 
 def post_slack(channel_name, message, user):
@@ -139,8 +141,12 @@ def handle(event, context, *, dry_run=0):
 
 
 if __name__=='__main__':
+  import argparse
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--dry_run', type=int, default=1)
+  args = parser.parse_args()
   handle({
     'channel_name': 'sandbox',
-    'text': '@lambot 回文 abcdefg',
+    'text': '@lambot まぐろ',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
-  }, '', dry_run=1)
+  }, '', dry_run=args.dry_run)
