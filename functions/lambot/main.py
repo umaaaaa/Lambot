@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import boto3
+from slackclient import SlackClient
 import datetime
 from sayings import *
 import random
@@ -37,12 +38,27 @@ def get_aws_billing():
 
   return {'cost': cost, 'date': date}
 
+
+def post_slack(channel_id, message, user):
+  token = os.environ['SLACK_TOKEN']
+  sc = SlackClient(token)
+  if user == 'lambot':
+    sc.api_call(
+      "chat.postMessage",
+      channel=channel_id,
+      text=message,
+      as_user='true',
+    )
+
+
 def handle(event, context):
   check_authorization(event['token'])
 
+  channel_id     = event['channel_id']
   text           = event['text']
   cmd_list       = text.split()
   lambot_message = '';
+  user           = 'lambot';
 
   for i, cmd in enumerate(cmd_list):
     # 最初の1つ目はlambotのはずなのでスキップ
@@ -65,12 +81,13 @@ def handle(event, context):
           lambot_message = "%sまでのAWSの料金は、$%sだ！" % (billing['date'], billing['cost'])
           break
 
-  return { 'text': lambot_message }
+  post_slack(channel_id, lambot_message, user)
+  return
 
 
 if __name__=='__main__':
-  value = handle({
+  handle({
+    'channel_id': 'C9Q6L6SE6',
     'text': 'lambot shuffle hoge fuga piyo',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
   }, '')
-  print(value)
