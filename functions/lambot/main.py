@@ -55,11 +55,13 @@ def convert_cm_to_sun(cm):
   }
 
 
-def acme(word):
-  if (word in ['マグロ', 'まぐろ', '鮪']):
+def acme(cmd, word):
+  if (cmd in ['マグロ', 'まぐろ', '鮪']):
     return 'あいよ っ🍣'
-  if (word == 'say'):
+  if (cmd == 'say'):
     return random.choice(SAYING_LIST)
+  if (cmd == '回文'):
+    return word[::-1]
 
 
 def post_slack(channel_name, message, user):
@@ -122,7 +124,10 @@ def handle(event, context):
           break
 
       if (cmd in ACME_WORDS):
-        lambot_message = acme(cmd)
+        word = ''
+        if (i != len(cmd_list)-1):
+          word = cmd_list[i+1]
+        lambot_message = acme(cmd, word)
 
   post_slack(channel_name, lambot_message, user)
 
@@ -132,6 +137,6 @@ def handle(event, context):
 if __name__=='__main__':
   handle({
     'channel_name': 'sandbox',
-    'text': '@lambot 35cm',
+    'text': '@lambot 回文 abcdefg',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
   }, '')

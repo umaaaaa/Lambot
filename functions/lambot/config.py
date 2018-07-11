@@ -13,4 +13,5 @@ SAYING_LIST = [
 ACME_WORDS = [
   'マグロ',
   'say',
+  '回文',
 ]
