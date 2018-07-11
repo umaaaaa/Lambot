@@ -58,6 +58,8 @@ def convert_cm_to_sun(cm):
 def acme(word):
   if (word in ['マグロ', 'まぐろ', '鮪']):
     return 'あいよ っ🍣'
+  if (word == 'say'):
+    return random.choice(SAYING_LIST)
 
 
 def post_slack(channel_name, message, user):
@@ -86,16 +88,15 @@ def handle(event, context):
     if (i == 0):
       continue
     if (i == 1):
-      if (cmd == 'say'):
-        lambot_message = random.choice(SAYING_LIST)
-        break
       if (cmd == 'choice'):
         lambot_message = random.choice(cmd_list[2:])
         break
+
       if (cmd == 'shuffle'):
         shuffled = random.sample(cmd_list[2:], len(cmd_list[2:]))
         lambot_message = ' '.join(shuffled)
         break
+
       if re.compile('寸|sun').search(cmd):
         pattern=r'([+-]?[0-9]+\.?[0-9]*)'  # 数字判別の正規表現パターン
         numbers = re.findall(pattern,cmd)  # 数字を抽出したリスト
@@ -104,6 +105,7 @@ def handle(event, context):
         cm  = convert_sun_to_cm(sun)
         lambot_message = "%s寸 は 約%scmだ！" % (sun, cm)
         break;
+
       if re.compile('cm|センチ').search(cmd):
         pattern=r'([+-]?[0-9]+\.?[0-9]*)'  # 数字判別の正規表現パターン
         numbers = re.findall(pattern,cmd)  # 数字を抽出したリスト
@@ -112,11 +114,13 @@ def handle(event, context):
         shaku_sun = convert_cm_to_sun(cm)
         lambot_message = "%scm は 約%s尺%s寸だ！" % (cm, shaku_sun['shaku'], shaku_sun['sun'])
         break;
+
       if (cmd == 'aws'):
         if (cmd_list[i+1] == 'billing'):
           billing = get_aws_billing()
           lambot_message = "%sまでのAWSの料金は、$%sだ！" % (billing['date'], billing['cost'])
           break
+
       if (cmd in ACME_WORDS):
         lambot_message = acme(cmd)
 
