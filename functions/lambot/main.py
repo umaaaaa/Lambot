@@ -76,7 +76,7 @@ def post_slack(channel_name, message, user):
     )
 
 
-def handle(event, context):
+def handle(event, context, *, dry_run=0):
   check_authorization(event['token'])
 
   channel_name   = event['channel_name']
@@ -129,6 +129,10 @@ def handle(event, context):
           word = cmd_list[i+1]
         lambot_message = acme(cmd, word)
 
+  if dry_run:
+    print(lambot_message)
+    return
+
   post_slack(channel_name, lambot_message, user)
 
   return
@@ -139,4 +143,4 @@ if __name__=='__main__':
     'channel_name': 'sandbox',
     'text': '@lambot 回文 abcdefg',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
-  }, '')
+  }, '', dry_run=1)
