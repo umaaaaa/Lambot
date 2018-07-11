@@ -56,7 +56,8 @@ def handle(event, context):
         lambot_message = random.choice(cmd_list[2:])
         break
       if (cmd == 'shuffle'):
-        lambot_message = random.shuffle(cmd_list[2:])
+        shuffled = random.sample(cmd_list[2:], len(cmd_list[2:]))
+        lambot_message = ' '.join(shuffled)
         break
       if (cmd == 'aws'):
         if (cmd_list[i+1] == 'billing'):
@@ -69,7 +70,7 @@ def handle(event, context):
 
 if __name__=='__main__':
   value = handle({
-    'text': 'lambot hoge',
+    'text': 'lambot shuffle hoge fuga piyo',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
   }, '')
   print(value)
