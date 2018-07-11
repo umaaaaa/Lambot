@@ -4,7 +4,7 @@
 import boto3
 from slackclient import SlackClient
 import datetime
-from sayings import *
+from config import *
 import random
 import os
 
