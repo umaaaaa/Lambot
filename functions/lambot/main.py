@@ -4,6 +4,7 @@
 import boto3
 from slackclient import SlackClient
 import datetime
+import jawiki
 from config import *
 import random
 import os
@@ -53,6 +54,19 @@ def convert_cm_to_sun(cm):
     'shaku': int(sun / 10),
     'sun': round(float(sun % 10), 2)
   }
+
+
+# wikipedia検索
+def search_wiki(word):
+  try:
+    page = jawiki.page(word)
+    return {
+      'title': page.title,
+      'summary': page.summary,
+      'url': page.url
+    }
+  except:
+    return False
 
 
 def acme(cmd, word):
@@ -125,6 +139,15 @@ def handle(event, context, *, dry_run=0):
           lambot_message = "%sまでのAWSの料金は、$%sだ！" % (billing['date'], billing['cost'])
           break
 
+      if (cmd =='wiki'):
+        search_word = cmd_list[i+1]
+        result = search_wiki(search_word)
+        if not result:
+          lambot_message = "俺の辞書(Wikipedia)に'%s'という言葉はない！" % (search_word)
+          break
+        lambot_message = "```## %s\n%s\n%s```" % (result['title'], result['summary'], result['url'])
+        break
+
       if (cmd in ACME_WORDS):
         word = ''
         if (i != len(cmd_list)-1):
@@ -147,6 +170,6 @@ if __name__=='__main__':
   args = parser.parse_args()
   handle({
     'channel_name': 'sandbox',
-    'text': '@lambot まぐろ',
+    'text': '@lambot wiki いえったいあ',
     'token': os.environ['OUTGOING_SLACK_TOKEN']
   }, '', dry_run=args.dry_run)
