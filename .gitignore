@@ -4,3 +4,4 @@ site-packages
 .env
 __pychache__/
 *.pyc
+client_secret.json
